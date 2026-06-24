@@ -11,7 +11,8 @@ COPY vite.config.js ./
 COPY resources ./resources
 COPY public ./public
 
-RUN npm run build
+RUN npm run build \
+    && test -f public/build/manifest.json
 
 FROM composer:2 AS vendor
 
@@ -39,8 +40,9 @@ COPY --from=vendor /app /var/www/html
 COPY --from=frontend /app/public/build /var/www/html/public/build
 
 RUN mkdir -p storage/framework/{cache,sessions,views} storage/logs bootstrap/cache \
-    && chown -R www-data:www-data storage bootstrap/cache \
-    && chmod -R 775 storage bootstrap/cache
+    && chown -R www-data:www-data storage bootstrap/cache public/build \
+    && chmod -R 775 storage bootstrap/cache \
+    && chmod -R a+rX public/build
 
 COPY docker/render-start.sh /usr/local/bin/render-start.sh
 RUN chmod +x /usr/local/bin/render-start.sh
