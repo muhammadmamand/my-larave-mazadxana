@@ -23,8 +23,8 @@ return new class extends Migration
             $table->unsignedInteger('watchers')->default(0);
             $table->enum('status', ['upcoming', 'live', 'ended', 'sold'])->default('live');
             $table->boolean('featured')->default(false);
-            $table->timestamp('starts_at')->nullable();
-            $table->timestamp('ends_at');
+            $table->dateTime('starts_at')->nullable();
+            $table->dateTime('ends_at');
             $table->timestamps();
         });
     }
